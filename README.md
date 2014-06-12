@@ -1,7 +1,7 @@
 solr-multilangs-analyzer
 ============================
 
-A new multiple language architecture, it can support index and search across multiple languages at the same time in the same field.
+A new solr multiple language index and search architecture, it can support index and search across multiple languages at the same time in the same field.
 
 ### Feature
 
@@ -9,7 +9,7 @@ A new multiple language architecture, it can support index and search across mul
 * Support true multilingual searching, including mixed-language phrases.
 * Not require store duplicated contents per language, reduce index size.
 * Reduce fields count to be searched per request, increasing search speed.
-* Support language detection(language-detection plugin).
+* Support language detection([language-detection](https://code.google.com/p/language-detection/) plugin).
 * Easy to be used, it can be used in any solr server as a plugin.
 
 ### Configuration
@@ -33,10 +33,9 @@ The standard of lang codes that support [language-detection](https://code.google
 "th", "tl", "tr", "uk", "ur", "vi", "zh-cn", "zh-tw"
 ```
 
-When using this MultiLangField to do query operation, you need to following the rules, for example, you want to search ```content```,
-you can pass query string ```en,zh-cn,ja|good morning```, before ```|``` is the lang codes, after it is the keywords.
+When using this MultiLangField to do query operation, you need to following the rules, for example, you want to search ```content```, you can pass query string ```en,zh-cn,ja|good morning```, before ```|``` is the lang codes, after it is the keywords.
 
-you can custom the delimiter ```|``` with using ```keyFromTextDelimiter```, ex, keyFromTextDelimiter="_", but you only can set the delimiter as single character!!!
+You can custom the delimiter ```|``` with using ```keyFromTextDelimiter```, ex, ```keyFromTextDelimiter="_"```, but you only can set the delimiter as ```single character!!!```
 If you want custom the delimiter ```,``` between lang codes, you can specify the ```multiKeyDelimiter```.
 
 The following is the example code:
@@ -64,15 +63,15 @@ For example:
 
 ##### Language Identification
 
-* ```multi-langid```: Enables/disables language detection, default is true.
-* ```multi-langid.fl```: A comma-delimited list of fields to be used in language identification. Required!!!
+* ```multi-langid```: Enables/disables language detection, default is ```true```.
+* ```multi-langid.fl```: A comma-delimited list of fields to be used in language identification. ```Required!!!```
 * ```multi-langid.whitelist```: Specifies a list of allowed language identification codes.
 If you specify langid.map, you can use the whitelist to ensure that you only index documents into fields that exist in your schema.
 * ```multi-langid.fallback```: Specifies a language code to use if no language is detected or if no language is found in langid.fallbackFields.
 If no fallback is defined, the final language code will be an empty string, which could cause unexpected behavior.
 * ```multi-langid.threshold```: Specifies a threshold value between 0 and 1 that the language identification score must reach before being accepted.
-With longer text fields, a high threshold such as 0.8 will yield better results. For shorter text fields, you may need to lower the threshold. Default is 0.5.
-* ```multi-langid.hidePreLangs```: If true it will hide the predefined lang codes, otherwise, it will display the lang codes. Default is true.
+With longer text fields, a high threshold such as 0.8 will yield better results. For shorter text fields, you may need to lower the threshold. Default is ```0.5```.
+* ```multi-langid.hidePreLangs```: If true it will hide the predefined lang codes, otherwise, it will display the lang codes. Default is ```true```.
 
 The following is the example code:
 
