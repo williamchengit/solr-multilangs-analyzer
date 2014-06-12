@@ -126,7 +126,7 @@ public class MultiLangTokenizer extends Tokenizer {
 
 		CharTermAttribute charTermAttribute = getCharTermAttribute(tokenStream);
 		OffsetAttribute offsetAttribute = getOffsetAttribute(tokenStream);
-		TypeAttribute typeAttribute = getTypeAttribute(tokenStream);
+//		TypeAttribute typeAttribute = getTypeAttribute(tokenStream);
 		PositionIncrementAttribute positionIncrementAttribute = getPositionIncrementAttribute(tokenStream);
 
 		while (tokenStream.incrementToken()) {
