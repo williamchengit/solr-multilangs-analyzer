@@ -1,5 +1,6 @@
 package com.worksap.labs.solr.helper;
 
+import com.google.common.collect.Maps;
 import com.worksap.labs.solr.setting.AnalyzerMode;
 import com.worksap.labs.solr.setting.MultiLangFieldSetting;
 import org.apache.commons.lang.StringUtils;
@@ -66,7 +67,7 @@ public final class MultiLangFieldSettingHelper {
 	}
 
 	private static Map<String, String> getFieldTypeMappings(Map<String, String> args) {
-		Map<String, String> fieldTypeMappings = new HashMap<String, String>();
+		Map<String, String> fieldTypeMappings = Maps.newHashMap();
 		if (args.containsKey(MultiLangFieldSetting.FIELD_TYPE_MAPPINGS)) {
 			String mappingStr = args.get(MultiLangFieldSetting.FIELD_TYPE_MAPPINGS);
 			if (StringUtils.isNotEmpty(mappingStr)) {

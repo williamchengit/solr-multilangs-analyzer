@@ -25,7 +25,7 @@ public class MultiLangAnalyzer extends Analyzer {
 	}
 
 	@Override
-	protected TokenStreamComponents createComponents(String fieldName, Reader reader) {
+	public TokenStreamComponents createComponents(String fieldName, Reader reader) {
 		MultiLangTokenizer tokenizer = new MultiLangTokenizer(schema, setting, fieldName, reader);
 		Tokenizer source = tokenizer;
 		TokenStream result = tokenizer;

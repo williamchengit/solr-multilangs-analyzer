@@ -1,6 +1,7 @@
 package com.worksap.labs.solr.analysis;
 
-
+import com.google.common.collect.Sets;
+import com.worksap.labs.solr.setting.MultiLangFieldSetting;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
@@ -29,7 +30,7 @@ public class MultiLangReaderWrapper {
 		StringBuffer langBuffer = new StringBuffer();
 		StringBuffer contentBuffer = new StringBuffer();
 
-		this.langKeys = new LinkedHashSet<String>();
+		this.langKeys = Sets.newLinkedHashSet();
 		this.strippingLength = 0;
 
 		boolean delimiterWasHit = false;
@@ -52,7 +53,14 @@ public class MultiLangReaderWrapper {
 		String content = contentBuffer.toString();
 
 		if (delimiterWasHit) {
-			strippingLength = (lang + this.keyFromTextDelimiter).length();
+			this.strippingLength = (lang + this.keyFromTextDelimiter).length();
+
+			if (lang.startsWith(MultiLangFieldSetting.LEFT_DELIMITER_OF_HIDDEN_FLAG)
+					&& content.startsWith(MultiLangFieldSetting.RIGHT_DELIMITER_OF_HIDDEN_FLAG)) {
+				this.strippingLength = 0;
+				lang = lang.substring(1);
+				content = content.substring(1);
+			}
 
 			String[] keys = lang.split(this.multiKeyDelimiter);
 			for (String key : keys) {

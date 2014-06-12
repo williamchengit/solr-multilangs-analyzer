@@ -1,5 +1,7 @@
 package com.worksap.labs.solr.analysis;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.worksap.labs.solr.setting.AnalyzerMode;
 import com.worksap.labs.solr.setting.MultiLangFieldSetting;
 import org.apache.commons.lang.StringUtils;
@@ -87,7 +89,7 @@ public class MultiLangTokenizer extends Tokenizer {
 	}
 
 	private List<Token> mergeTokenStream(Map<Integer, List<Token>> tokenPosMap) {
-		List<Token> rsList = new LinkedList<Token>();
+		List<Token> rsList = Lists.newLinkedList();
 
 		int prevPos = 0;
 		for (int pos : tokenPosMap.keySet()) {
@@ -107,7 +109,7 @@ public class MultiLangTokenizer extends Tokenizer {
 	}
 
 	private Map<Integer, List<Token>> mappingTokenPosition(String data) throws IOException {
-		Map<Integer, List<Token>> tokenPosMap = new TreeMap<Integer, List<Token>>();
+		Map<Integer, List<Token>> tokenPosMap = Maps.newTreeMap();
 
 		for (Map.Entry<String, Analyzer> entry : this.fieldTypeAnalyzers.entrySet()) {
 			String tokenStreamName = this.fieldName + " " + entry.getKey();
@@ -129,10 +131,6 @@ public class MultiLangTokenizer extends Tokenizer {
 
 		while (tokenStream.incrementToken()) {
 			//TODO!!! Check why Japanese tokenizer has not TypeAttribute
-//			if (null == charTermAttribute || null == offsetAttribute
-//					|| (null == typeAttribute && AnalyzerMode.multiTerm != this.setting.getAnalyzerMode())) {
-//				return;
-//			}
 			if (null == charTermAttribute || null == offsetAttribute) {
 				return;
 			}
@@ -206,7 +204,7 @@ public class MultiLangTokenizer extends Tokenizer {
 	}
 
 	private Map<String, Analyzer> getFieldTypeAnalyzers() {
-		Map<String, Analyzer> fieldTypeAnalyzers = new LinkedHashMap<String, Analyzer>();
+		Map<String, Analyzer> fieldTypeAnalyzers = Maps.newLinkedHashMap();
 		Set<String> langKeys = this.readerWrapper.getLangKeys();
 		Map<String, String> fieldTypeMappings = this.setting.getFieldTypeMappings();
 		AnalyzerMode analyzerMode = this.setting.getAnalyzerMode();

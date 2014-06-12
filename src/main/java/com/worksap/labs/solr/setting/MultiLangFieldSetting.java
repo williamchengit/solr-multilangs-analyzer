@@ -13,6 +13,8 @@ public class MultiLangFieldSetting {
 
 	public final static String DELIMITER_BETWEEN_FIELD_TYPE_MAPPING = ",";
 	public final static String DELIMITER_BETWEEN_KEY_AND_FIELD_TYPE = ":";
+	public final static String LEFT_DELIMITER_OF_HIDDEN_FLAG = "[";
+	public final static String RIGHT_DELIMITER_OF_HIDDEN_FLAG = "]";
 	public final static String DEFAULT_KEY_FROM_TEXT_DELIMITER = "|";
 	public final static String DEFAULT_MULTI_KEY_DELIMITER = ",";
 	public final static boolean DEFAULT_IGNORE_INVALID_MAPPINGS = false;
