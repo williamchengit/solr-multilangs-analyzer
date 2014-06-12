@@ -1,4 +1,4 @@
-solr-multilangs-analyzer
+solr-multilangs-analyzer[![Build Status](https://api.travis-ci.org/smalldirector/solr-multilangs-analyzer.svg)](https://travis-ci.org/smalldirector/solr-multilangs-analyzer)
 ============================
 
 A new solr multiple language index and search architecture, it can support index and search across multiple languages at the same time in the same field.
