@@ -137,6 +137,9 @@ public class MultiLangTokenizer extends Tokenizer {
 			}
 			Token token = new Token(charTermAttribute.buffer(), 0, charTermAttribute.length(),
 					offsetAttribute.startOffset(), offsetAttribute.endOffset());
+			if (null != typeAttribute) {
+				token.setType(typeAttribute.type());
+			}
 			pos += null != positionIncrementAttribute ? positionIncrementAttribute.getPositionIncrement() : 1;
 			if (!tokenPosMap.containsKey(pos)) {
 				tokenPosMap.put(pos, new LinkedList<Token>());
