@@ -80,7 +80,8 @@ public class MultiLangTokenizer extends Tokenizer {
 
 			Token firstToken = this.tokens.remove(0);
 			this.charTermAttribute.copyBuffer(firstToken.buffer(), 0, firstToken.length());
-			this.offsetAttribute.setOffset(firstToken.startOffset(), firstToken.endOffset() + this.startingOffset);
+			this.offsetAttribute.setOffset(firstToken.startOffset() + this.startingOffset, firstToken.endOffset()
+					+ this.startingOffset);
 			this.typeAttribute.setType(firstToken.type());
 			this.positionIncrementAttribute.setPositionIncrement(firstToken.getPositionIncrement());
 
@@ -126,11 +127,11 @@ public class MultiLangTokenizer extends Tokenizer {
 
 		CharTermAttribute charTermAttribute = getCharTermAttribute(tokenStream);
 		OffsetAttribute offsetAttribute = getOffsetAttribute(tokenStream);
-//		TypeAttribute typeAttribute = getTypeAttribute(tokenStream);
+		TypeAttribute typeAttribute = getTypeAttribute(tokenStream);
 		PositionIncrementAttribute positionIncrementAttribute = getPositionIncrementAttribute(tokenStream);
 
 		while (tokenStream.incrementToken()) {
-			//TODO!!! Check why Japanese tokenizer has not TypeAttribute
+			// TODO!!! Check why Japanese tokenizer has not TypeAttribute
 			if (null == charTermAttribute || null == offsetAttribute) {
 				return;
 			}
