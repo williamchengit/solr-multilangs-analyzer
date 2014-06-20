@@ -1,5 +1,6 @@
 package com.worksap.labs.solr.analysis;
 
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.worksap.labs.solr.setting.AnalyzerMode;
@@ -17,18 +18,24 @@ import org.apache.solr.common.SolrException;
 import org.apache.solr.schema.FieldType;
 import org.apache.solr.schema.IndexSchema;
 import org.apache.solr.schema.TextField;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.nio.CharBuffer;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <code>MultiLangTokenizer</code> is the custom tokenizer to support
  * multilingual tokenize.
  */
 public class MultiLangTokenizer extends Tokenizer {
+
+	private static final Logger logger = LoggerFactory.getLogger(MultiLangTokenizer.class);
+	private static final Stopwatch watcher = new Stopwatch();
 
 	private IndexSchema schema;
 	private MultiLangFieldSetting setting;
@@ -62,6 +69,10 @@ public class MultiLangTokenizer extends Tokenizer {
 	@Override
 	public boolean incrementToken() throws IOException {
 		if (null == tokens) {
+			if (logger.isDebugEnabled()) {
+				watcher.reset();
+				watcher.start();
+			}
 			String data = fetchDataFromReader(this.readerWrapper.getReader());
 			if (StringUtils.isEmpty(data)) {
 				return false;
@@ -69,6 +80,10 @@ public class MultiLangTokenizer extends Tokenizer {
 			this.tokens = mergeTokenStream(mappingTokenPosition(data));
 			if (null == this.tokens) {
 				return false;
+			}
+			if (logger.isDebugEnabled()) {
+				watcher.stop();
+				logger.debug("Tokenize source '{}' cost {} ms.", data, watcher.elapsed(TimeUnit.MILLISECONDS));
 			}
 		}
 
@@ -131,7 +146,6 @@ public class MultiLangTokenizer extends Tokenizer {
 		PositionIncrementAttribute positionIncrementAttribute = getPositionIncrementAttribute(tokenStream);
 
 		while (tokenStream.incrementToken()) {
-			// TODO!!! Check why Japanese tokenizer has not TypeAttribute
 			if (null == charTermAttribute || null == offsetAttribute) {
 				return;
 			}
@@ -196,12 +210,19 @@ public class MultiLangTokenizer extends Tokenizer {
 	public void reset() throws IOException {
 		super.reset();
 		this.tokens = null;
-
+		if (logger.isDebugEnabled()) {
+			watcher.reset();
+			watcher.start();
+		}
 		if (null == this.readerWrapper) {
 			this.readerWrapper = new MultiLangReaderWrapper(this.input, this.setting.getKeyFromTextDelimiter(),
 					this.setting.getMultiKeyDelimiter());
 		} else {
 			this.readerWrapper.wrapReader(this.input);
+		}
+		if (logger.isDebugEnabled()) {
+			watcher.stop();
+			logger.debug("The cost time of wrapping input source is {} ms.", watcher.elapsed(TimeUnit.MILLISECONDS));
 		}
 		this.startingOffset = this.readerWrapper.getStrippingLength();
 		this.fieldTypeAnalyzers = getFieldTypeAnalyzers();
