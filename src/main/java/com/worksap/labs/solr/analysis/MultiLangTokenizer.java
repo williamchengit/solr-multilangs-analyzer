@@ -3,6 +3,7 @@ package com.worksap.labs.solr.analysis;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.worksap.labs.solr.helper.TokenStreamBuildHelper;
 import com.worksap.labs.solr.setting.AnalyzerMode;
 import com.worksap.labs.solr.setting.MultiLangFieldSetting;
 import org.apache.commons.lang.StringUtils;
@@ -133,6 +134,9 @@ public class MultiLangTokenizer extends Tokenizer {
 			handleTokenStream(tokenPosMap, tokenStream);
 		}
 
+		if (this.setting.getAnalyzerMode().equals(AnalyzerMode.query)) {
+			return TokenStreamBuildHelper.build(tokenPosMap);
+		}
 		return tokenPosMap;
 	}
 
