@@ -4,12 +4,14 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.lucene.analysis.Token;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public final class TokenStreamBuildHelper {
 
 	public static Map<Integer, List<Token>> build(Map<Integer, List<Token>> source) {
+		source = removeDuplicate(source);
 		Map<Integer, List<Token>> target = deepClone(source);
 		Map<Token, Integer> filterMap = generateFilterMap(source);
 		for (Map.Entry<Integer, List<Token>> entry : source.entrySet()) {
@@ -35,6 +37,29 @@ public final class TokenStreamBuildHelper {
 		return target;
 	}
 
+	private static Map<Integer, List<Token>> removeDuplicate(Map<Integer, List<Token>> source) {
+		Map<Integer, List<Token>> target = Maps.newTreeMap();
+
+		Map<String, Integer> counter = Maps.newHashMap();
+
+		for (int pos : source.keySet()) {
+			List<Token> tokens = source.get(pos);
+			if (!target.containsKey(pos)) {
+				target.put(pos, new LinkedList<Token>());
+			}
+			for (Token token : tokens) {
+				Integer num = counter.get(token.toString());
+				if (null == num) {
+					target.get(pos).add(token);
+					counter.put(token.toString(), 1);
+				}
+			}
+			counter.clear();
+		}
+
+		return target;
+	}
+
 	private static Map<Integer, List<Token>> deepClone(Map<Integer, List<Token>> source) {
 		Map<Integer, List<Token>> target = Maps.newTreeMap();
 		for (Map.Entry<Integer, List<Token>> entry : source.entrySet()) {
@@ -56,6 +81,7 @@ public final class TokenStreamBuildHelper {
 
 	private static Map<Token, Integer> generateFilterMap(Map<Integer, List<Token>> source) {
 		Map<Token, Integer> filterMap = Maps.newHashMap();
+		Map<String, Token> tokenMapping = Maps.newHashMap();
 
 		for (Map.Entry<Integer, List<Token>> entry : source.entrySet()) {
 			int pos = entry.getKey();
@@ -63,7 +89,11 @@ public final class TokenStreamBuildHelper {
 
 			for (Token token : tokens) {
 				if (token.length() > 1 && !isEnglishWord(token)) {
-					filterMap.put(token, pos);
+					Token tmp = tokenMapping.get(token.toString());
+					if (null == tmp) {
+						tokenMapping.put(token.toString(), token);
+						filterMap.put(token, pos);
+					}
 				}
 			}
 		}
